@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,20 +11,17 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { ExpandableCalendar, Agenda, CalendarProvider } from 'react-native-calendars';
+import { CalendarProvider, ExpandableCalendar, AgendaList } from 'react-native-calendars';
 import { AntDesign } from '@expo/vector-icons';
 
-const ITEMS = {
-  '2025-02-22': [{ name: 'Meeting with team', time: '10:00 AM' }],
-  '2025-02-23': [{ name: 'Dentist Appointment', time: '10:00 AM', details: 'Dentist Appointment with Dr. Smith', location: '3200 Richards College' }]
-};
+const ITEMS = [
+  { title: '2025-02-22', data: [{ name: 'Meeting with team', time: '10:00 AM' }] },
+  { title: '2025-02-23', data: [{ name: 'Dentist Appointment', time: '10:00 AM', details: 'With Dr. Smith', location: '3200 Richards College' }] },
+  { title: '2025-06-24', data: [{ name: 'Suggested: Dentist Appointment', time: '10:00 AM', details: 'With Dr. Smith', location: '3200 Richards College' }] },
+  { title: '2025-02-30', data: [{ name: 'General Wellness Check-up', time: '10:00 AM', details: 'With Dr. Kim', location: '3200 Richards College' }] }
+];
 
-interface Props {
-  weekView?: boolean;
-}
-
-const ExpandableCalendarScreen = (props: Props) => {
-  const { weekView } = props;
+const ExpandableCalendarScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [newEvent, setNewEvent] = useState({ title: '', time: '', location: '', description: '' });
 
@@ -44,7 +41,7 @@ const ExpandableCalendarScreen = (props: Props) => {
     monthTextColor: '#c72c41'
   });
 
-  const renderItem = useCallback((item: any) => (
+  const renderItem = useCallback(({ item }) => (
     <TouchableOpacity style={styles.item}>
       <Text style={styles.itemText}>{item.name}</Text>
       {item.time && <Text style={styles.time}>{item.time}</Text>}
@@ -57,35 +54,47 @@ const ExpandableCalendarScreen = (props: Props) => {
   const closeModal = () => setModalVisible(false);
 
   return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <CalendarProvider date={'2025-02-22'} showTodayButton theme={{ todayButtonTextColor: '#c72c41' }}>
-          <ExpandableCalendar firstDay={1} markedDates={marked.current} theme={theme.current} />
-          <Agenda items={ITEMS} renderItem={renderItem} />
-        </CalendarProvider>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <CalendarProvider date={'2025-02-22'} showTodayButton theme={{ todayButtonTextColor: '#c72c41' }}>
+        
+        {/* Expandable Calendar (Starts in Week View, Expands to Month View) */}
+        <ExpandableCalendar 
+          firstDay={1}
+          markedDates={marked.current}
+          theme={theme.current}
+          hideArrows={false}
+          disablePan={false} // Enables pull-down gesture
+          disableWeekScroll={false} // Allows week scrolling
+        />
 
-        {/* Floating "Add Event" Button */}
-        <TouchableOpacity style={styles.floatingButton} onPress={openModal}>
-          <AntDesign name="pluscircleo" size={50} color="#c72c41" />
-        </TouchableOpacity>
+        {/* Event List */}
+        <AgendaList sections={ITEMS} renderItem={renderItem} sectionStyle={styles.section} />
 
-        {/* Modal for Adding Events */}
-        <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
-          <View style={styles.modalBackground}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Add New Event</Text>
-              <TextInput style={styles.input} placeholder="Title" value={newEvent.title} onChangeText={(text) => setNewEvent({ ...newEvent, title: text })} />
-              <TextInput style={styles.input} placeholder="Time" value={newEvent.time} onChangeText={(text) => setNewEvent({ ...newEvent, time: text })} />
-              <TextInput style={styles.input} placeholder="Location" value={newEvent.location} onChangeText={(text) => setNewEvent({ ...newEvent, location: text })} />
-              <TextInput style={styles.input} placeholder="Description" value={newEvent.description} onChangeText={(text) => setNewEvent({ ...newEvent, description: text })} multiline />
+      </CalendarProvider>
 
-              <View style={styles.buttonRow}>
-                <Button title="Cancel" color="gray" onPress={closeModal} />
-                <Button title="Add Event" color="#c72c41" onPress={closeModal} />
-              </View>
+      {/* Floating "Add Event" Button */}
+      <TouchableOpacity style={styles.floatingButton} onPress={openModal}>
+        <AntDesign name="pluscircleo" size={50} color="#c72c41" />
+      </TouchableOpacity>
+
+      {/* Modal for Adding Events */}
+      <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Add New Event</Text>
+            <TextInput style={styles.input} placeholder="Title" value={newEvent.title} onChangeText={(text) => setNewEvent({ ...newEvent, title: text })} />
+            <TextInput style={styles.input} placeholder="Time" value={newEvent.time} onChangeText={(text) => setNewEvent({ ...newEvent, time: text })} />
+            <TextInput style={styles.input} placeholder="Location" value={newEvent.location} onChangeText={(text) => setNewEvent({ ...newEvent, location: text })} />
+            <TextInput style={styles.input} placeholder="Description" value={newEvent.description} onChangeText={(text) => setNewEvent({ ...newEvent, description: text })} multiline />
+
+            <View style={styles.buttonRow}>
+              <Button title="Cancel" color="gray" onPress={closeModal} />
+              <Button title="Add Event" color="#c72c41" onPress={closeModal} />
             </View>
           </View>
-        </Modal>
-      </KeyboardAvoidingView>
+        </View>
+      </Modal>
+    </KeyboardAvoidingView>
   );
 };
 
