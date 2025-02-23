@@ -16,7 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Entypo from '@expo/vector-icons/Entypo';
 
-const API_KEY = 'AIzaSyD7Wa-oGvxwusTxTNwdvsE5n9xMQcWZFRc'; 
+const API_KEY = ''; 
 
 interface Message {
   text: string;
