@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { CalendarProvider, ExpandableCalendar, AgendaList } from 'react-native-calendars';
 import { AntDesign } from '@expo/vector-icons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+
 
 const ITEMS = [
   { title: '2025-02-22', data: [{ name: 'Meeting with team', time: '10:00 AM' }] },
@@ -74,8 +76,8 @@ const ExpandableCalendarScreen = () => {
 
       {/* Floating "Add Event" Button */}
       <TouchableOpacity style={styles.floatingButton} onPress={openModal}>
-        <AntDesign name="pluscircleo" size={50} color="#c72c41" />
-      </TouchableOpacity>
+        <FontAwesome6 name="plus" size={45} color="white" />
+    </TouchableOpacity>
 
       {/* Modal for Adding Events */}
       <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
@@ -89,7 +91,7 @@ const ExpandableCalendarScreen = () => {
 
             <View style={styles.buttonRow}>
               <Button title="Cancel" color="gray" onPress={closeModal} />
-              <Button title="Add Event" color="#c72c41" onPress={closeModal} />
+              <Button title="Add Appointment" color="#c72c41" onPress={closeModal} />
             </View>
           </View>
         </View>
@@ -102,12 +104,12 @@ export default ExpandableCalendarScreen;
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#c72c41',
+    backgroundColor: '#A50034',
     flex: 1,
     borderRadius: 5,
     padding: 10,
-    marginRight: 10,
-    marginTop: 25,
+    marginRight: 20,
+    marginLeft: 20,
     paddingBottom: 20,
     rowGap: 10
   },
@@ -129,13 +131,21 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   floatingButton: {
-    position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: 'transparent',
+    position: 'absolute',
+    width: 55,
+    height: 55,
+    borderRadius: 100,
+    backgroundColor: '#C72C41',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
-  },
+    elevation: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.55,
+},
+
   modalBackground: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
