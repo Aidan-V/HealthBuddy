@@ -16,6 +16,8 @@ export default function TabsLayout() {
             backgroundColor: "#000000",
             borderTopColor: "#000000",
             borderTopWidth: 2,
+            justifyContent: "space-around", // Ensures equal spacing
+            paddingHorizontal: 20, // Optional: Adjust spacing
           },
           tabBarShowLabel: false, // Hide labels
         }}
@@ -46,9 +48,13 @@ export default function TabsLayout() {
             title: "Chatbot",
             headerShown: false,
             tabBarIcon: () => (
-              <FontAwesome6 name="hand-holding-medical" size={18} color="black" />
+              <FontAwesome6 name="hand-holding-medical" size={18} color="white" />
             ),
           }}
+        />
+        <Tabs.Screen 
+           name="explore" 
+          options={{ headerShown: false, tabBarButton: () => null }} 
         />
       </Tabs>
     </>
